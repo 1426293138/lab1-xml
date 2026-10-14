@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Catalogue</title>
+</head>
+<body>
+    <h1>Book Catalogue</h1>
+    <ul id="bookList"></ul>
+
+    <script>
+        fetch('book.xml')
+            .then(response => response.text())
+            .then(xmlText => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                const books = xmlDoc.getElementsByTagName('book');
+                const list = document.getElementById('bookList');
+
+                for (let book of books) {
+                    const title = book.getElementsByTagName('title')[0].textContent;
+                    const author = book.getElementsByTagName('author')[0].textContent;
+                    const price = book.getElementsByTagName('price')[0].textContent;
+                    const li = document.createElement('li');
+                    li.textContent = title + ' - ' + author + ' - $' + price;
+                    list.appendChild(li);
+                }
+            })
+            .catch(err => console.error('Error: ' + err.message));
+    </script>
+</body>
+</html>
